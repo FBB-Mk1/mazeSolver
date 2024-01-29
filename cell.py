@@ -1,36 +1,37 @@
 from graphics import Line, Point
 
 class Cell:
-    def __init__(self, x1, y1, x2, y2, window):
+    def __init__(self, window):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
         self.has_bottom_wall = True
-        self._x1 = x1
-        self._y1 = y1
-        self._x2 = x2
-        self._y2 = y2
+        self._x1 = None
+        self._y1 = None
+        self._x2 = None
+        self._y2 = None
         self._win = window
-        self.__top = Line(Point(self._x1, self._y1), Point(self._x2, self._y1))
-        self.__left = Line(Point(self._x1, self._y1), Point(self._x1, self._y2))
-        self.__right = Line(Point(self._x2, self._y1), Point(self._x2, self._y2))
-        self.__bottom = Line(Point(self._x1, self._y2), Point(self._x2, self._y2))
-        
+
+
     def get_center(self):
         x = (self._x2 + self._x1) // 2
         y = (self._y2 + self._y1) // 2
         print(x, y)
         return Point(x, y) 
 
-    def draw(self):
+    def draw(self, x1, y1, x2, y2):
+        self._x1 = x1
+        self._x2 = x2
+        self._y1 = y1
+        self._y2 = y2
         if self.has_top_wall:
-            self._win.draw_line(self.__top,'black')
+            self._win.draw_line(Line(Point(x1, y1), Point(x2, y1)),'black')
         if self.has_left_wall:
-            self._win.draw_line(self.__left,'black')
+            self._win.draw_line(Line(Point(x1, y1), Point(x1, y2)),'black')
         if self.has_right_wall:
-            self._win.draw_line(self.__right,'black')
+            self._win.draw_line(Line(Point(x2, y1), Point(x2, y2)),'black')
         if self.has_bottom_wall:
-            self._win.draw_line(self.__bottom,'black')
+            self._win.draw_line(Line(Point(x1, y2), Point(x2, y2)),'black')
     
     def draw_move(self, to_cell, undo=False):
         line = Line(self.get_center(), to_cell.get_center())
