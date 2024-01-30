@@ -6,7 +6,7 @@ class Window:
         self.__root.title('Window')
         self.__root.protocol("WM_DELETE_WINDOW", self.close)
 
-        self.__canvas = Canvas(self.__root, width=width, height=height)
+        self.__canvas = Canvas(self.__root, width=width, height=height, bg='white')
         self.__canvas.pack(expand=True, fill=BOTH)
 
         self.__running = False

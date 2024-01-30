@@ -11,7 +11,7 @@ class Cell:
         self._x2 = None
         self._y2 = None
         self._win = window
-
+        
 
     def get_center(self):
         x = (self._x2 + self._x1) // 2
