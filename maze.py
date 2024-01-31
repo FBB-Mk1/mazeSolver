@@ -1,4 +1,5 @@
 from cell import Cell
+from graphics import Line, Point, Window
 import time
 import random
 
@@ -53,7 +54,7 @@ class Maze():
         if self._win is None:
             return
         self._win.redraw()
-        #time.sleep(0.05)
+        time.sleep(0.05)
         
     
     def _break_entrance_and_exit(self):
@@ -102,3 +103,52 @@ class Maze():
         for i in range(self.num_cols):
             for j in range(self.num_rows):
                 self._cells[i][j]._visited=False
+
+
+    def solve(self):
+        self._solve_r(0,0)
+
+    def _solve_r(self, i, j):
+        #Call the _animate method.
+        # Mark the current cell as visited
+        self._cells[i][j]._visited = True
+        # If you are at the "end" cell (the goal) then return True.
+        if i == self.num_cols - 1 and j == self.num_rows - 1:
+            return True
+        # For each direction:
+        # If there is a cell in that direction, there is no wall blocking you, and that cell hasn't been visited:
+        # Draw a move between the current cell and that cell
+        to_visit = self._get_valid_moves(i, j)
+        if len(to_visit) > 0:
+            for v in to_visit:
+                line = Line(self._cells[i][j].get_center(), self._cells[v[0]][v[1]].get_center())
+                self._win.draw_line(line, 'red')
+                if self._solve_r(v[0],v[1]):
+                    return True
+                else:
+                    self._win.draw_line(line, 'gray')
+        self._animate()
+        return False
+        # Call _solve_r recursively to move to that cell. If that cell returns True, then just return True and don't worry about the other directions.
+        # Otherwise, draw an "undo" move between the current cell and the next cell
+        # If none of the directions worked out, return False.
+        
+    def _get_valid_moves(self, i, j):
+        moves = []
+        #left
+        if i > 0 and not self._cells[i - 1][j]._visited:
+            if not self._cells[i - 1][j].has_right_wall and not self._cells[i][j].has_left_wall:
+                moves.append((i-1, j))
+        #right
+        if i < self.num_cols - 1 and not self._cells[i + 1][j]._visited:
+            if not self._cells[i + 1][j].has_left_wall and not self._cells[i][j].has_right_wall:
+                moves.append((i + 1, j))
+        #top
+        if j > 0 and not self._cells[i][j - 1]._visited: 
+            if not self._cells[i][j - 1].has_bottom_wall and not self._cells[i][j].has_top_wall:
+                moves.append((i, j - 1))
+        #bottom
+        if j < self.num_rows - 1 and not self._cells[i][j + 1]._visited:
+            if not self._cells[i][j + 1].has_top_wall and not self._cells[i][j].has_bottom_wall:
+                moves.append((i, j + 1))
+        return moves

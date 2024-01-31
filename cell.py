@@ -19,6 +19,8 @@ class Cell:
     def get_center(self):
         x = (self._x2 + self._x1) // 2
         y = (self._y2 + self._y1) // 2
+        print(x)
+        print(y)
         return Point(x, y) 
 
     def draw(self, x1, y1, x2, y2, debug=False):
